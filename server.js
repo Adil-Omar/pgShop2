@@ -1,5 +1,6 @@
-import express from "express";
 import dotenv from "dotenv";
+import "dotenv/config"  
+import express from "express";
 import bodyParser from "body-parser";
 // import connectDB from "./config/db";
 // const authRoutes = require("./controllers/userController");
