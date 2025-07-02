@@ -154,6 +154,13 @@ app.get("/api/single-product/:id", async (req, res) => {
 });
 // *****************************************************************
 
+app.get("/favicon.ico", (_req, res) => res.status(204).end());
+
+/// 2. Catch‐all for any other undefined path
+app.use((req, res) => {
+  // Return 404 instead of letting it fall through (and potentially crash)
+  res.status(404).json({ error: "Not Found" });
+});
 
 
 
