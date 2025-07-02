@@ -1,4 +1,6 @@
 // Modify your db connection to handle serverless
+import mongoose from "mongoose";
+
 let isConnected = false;
  const connectDB = async () => {
   if (isConnected) return;
