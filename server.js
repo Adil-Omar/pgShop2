@@ -165,5 +165,5 @@ const PORT = process.env.PORT || 5000
 app.get("/", (req, res) => res.send("API WORKING"));
 
 
-export default serverless(app);
+export default app;
 // akash 
