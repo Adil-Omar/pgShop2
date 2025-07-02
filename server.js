@@ -9,6 +9,7 @@ import "dotenv/config.js";
 import connectDB from "./config/db.js";
 import axios from "axios";
 import connectCloudinary from "./config/cloudinary.js";
+import serverless from "serverless-http";
 connectDB();
 const app = express();
 
@@ -158,9 +159,11 @@ app.get("/api/single-product/:id", async (req, res) => {
 
 
 // console.log(`MONGO_URI: ${process.env.MONGO_URI}`);
+console.log(`PORT: ${process.env.PORT}`);
+
+const PORT = process.env.PORT || 5000
 app.get("/", (req, res) => res.send("API WORKING"));
 
-app.get('/favicon.ico', (req, res) => res.status(204).end());
-export default app
 
+export default serverless(app);
 // akash 
