@@ -115,7 +115,7 @@ export const getDiscountByProductId = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "Discount fetched successfully",
       data: discount
     });
