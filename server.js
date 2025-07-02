@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
-import "dotenv/config"  
 import express from "express";
+import dotenv from "dotenv";
 import bodyParser from "body-parser";
 // import connectDB from "./config/db";
 // const authRoutes = require("./controllers/userController");
@@ -10,7 +9,6 @@ import "dotenv/config.js";
 import connectDB from "./config/db.js";
 import axios from "axios";
 import connectCloudinary from "./config/cloudinary.js";
-import serverless from "serverless-http";
 connectDB();
 const app = express();
 
@@ -155,18 +153,8 @@ app.get("/api/single-product/:id", async (req, res) => {
 });
 // *****************************************************************
 
-app.get("/favicon.ico", (_req, res) => res.status(204).end());
 
-/// 2. Catch‐all for any other undefined path
-app.use((req, res) => {
-  // Return 404 instead of letting it fall through (and potentially crash)
-  res.status(404).json({ error: "Not Found" });
-});
 
-app.use((err, req, res, next) => {
-  console.error("🎯 Uncaught error in handler:", err.stack || err);
-  res.status(500).json({ error: "Internal Server Error" });
-});
 
 
 // console.log(`MONGO_URI: ${process.env.MONGO_URI}`);
@@ -175,6 +163,8 @@ console.log(`PORT: ${process.env.PORT}`);
 const PORT = process.env.PORT || 5000;
 app.get("/", (req, res) => res.send("API WORKING"));
 
-const handler = serverless(app);
-export { handler };
+export default function handler(req, res) {
+  return app(req,res)
+}
+
 // akash 
