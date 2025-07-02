@@ -1,13 +1,14 @@
-import mongoose from "mongoose";
-
-const connectDB = async () => {
+// Modify your db connection to handle serverless
+let isConnected = false;
+ const connectDB = async () => {
+  if (isConnected) return;
+  
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`MongoDB Connected successfully: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    await mongoose.connect(process.env.MONGO_URI);
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
   }
-};
-
-export default connectDB;
+}
+export default connectDB
