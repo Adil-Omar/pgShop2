@@ -162,7 +162,10 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-
+app.use((err, req, res, next) => {
+  console.error("🎯 Uncaught error in handler:", err.stack || err);
+  res.status(500).json({ error: "Internal Server Error" });
+});
 
 
 // console.log(`MONGO_URI: ${process.env.MONGO_URI}`);
