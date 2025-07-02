@@ -9,14 +9,24 @@ import "dotenv/config.js";
 import connectDB from "./config/db.js";
 import axios from "axios";
 import connectCloudinary from "./config/cloudinary.js";
-connectDB();
+try {
+  console.log("🔌 Connecting to DB…");
+  await connectDB();                   // if this throws, you’ll see it in the logs
+  console.log("✅ DB connected");
+
+  console.log("🔌 Connecting to Cloudinary…");
+  await connectCloudinary();          // same here
+  console.log("✅ Cloudinary connected");
+} catch (err) {
+  console.error("❌ Initialization error:", err.stack || err);
+  // don’t re‑throw—let the function start so your error handler can catch requests
+}
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Increase limit as needed
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // app.use(bodyParser.json());
-connectCloudinary();
 
 // console.log(process.env.JWT_SECRET);
 
