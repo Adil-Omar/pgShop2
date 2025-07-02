@@ -13,7 +13,7 @@ import {
 } from '../controllers/checkoutController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import adminMiddlewere from '../middleware/adminMiddlewere.js';
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 router.post(
