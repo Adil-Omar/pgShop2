@@ -97,21 +97,15 @@ export const addDiscount = async (req, res) => {
 
 
 export const getDiscountByProductId = async (req, res) => {
-  await connectDB();                              // 1️⃣ ensure DB is connected
-
-  
   const { productId } = req.params;
-
+  
   if (!productId) {
     return res.status(400).json({ message: "Product ID is required" });
   }
 
   try {
-    // If your DB stores numeric IDs, uncomment the next line:
-    // const id = Number(productId);
-
-    const discount = await ProductDiscount.findOne({ productId /* or use id */ });
-
+    const discount = await ProductDiscount.findOne({ productId });
+    
     if (!discount) {
       return res.status(200).json({
         message: "No discount for this product",
@@ -119,14 +113,16 @@ export const getDiscountByProductId = async (req, res) => {
       });
     }
 
-     return res.status(200).json({
+    return res.status(200).json({
       message: "Discount fetched successfully",
       data: discount
     });
-
   } catch (error) {
     console.error("Error in getDiscountByProductId:", error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ 
+      message: "Server error",
+      error: error.message // Include error details
+    });
   }
 };
 
