@@ -1,3 +1,4 @@
+import connectDB from "../config/db.js";
 import ProductDiscount from "../models/ProductDiscount.js";
 // import Admin from '../models/Admin.js'
 // import bcrypt from "bcryptjs";
@@ -96,6 +97,7 @@ export const addDiscount = async (req, res) => {
 
 
 export const getDiscountByProductId = async (req, res) => {
+  await connectDB();                              // 1️⃣ ensure DB is connected
 
   
   const { productId } = req.params;
