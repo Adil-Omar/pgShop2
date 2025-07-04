@@ -96,6 +96,8 @@ export const addDiscount = async (req, res) => {
 
 
 export const getDiscountByProductId = async (req, res) => {
+
+  
   const { productId } = req.params;
 
   if (!productId) {
@@ -115,7 +117,7 @@ export const getDiscountByProductId = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+     return res.status(200).json({
       message: "Discount fetched successfully",
       data: discount
     });
