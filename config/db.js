@@ -1,16 +1,48 @@
-// Modify your db connection to handle serverless
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-let isConnected = false;
- const connectDB = async () => {
-  if (isConnected) return;
-  
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    isConnected = true;
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-  }
+const MONGODB_URI = process.env.MONGO_URI;
+
+if (!MONGODB_URI) {
+  throw new Error(
+    'Please define the MONGO_URI environment variable inside .env.local'
+  );
 }
-export default connectDB
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    console.log('MongoDB connected successfully');
+  } catch (e) {
+    cached.promise = null;
+    console.error('MongoDB connection error:', e);
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+export default connectDB;
