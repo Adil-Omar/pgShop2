@@ -103,10 +103,24 @@ export const getDiscountByProductId = async (req, res) => {
   }
 
   try {
-    // If your DB stores numeric IDs, uncomment the next line:
-    // const id = Number(productId);
+    // Handle both string and numeric productId
+    let searchQuery;
+    
+    // If productId is a valid number, try both string and number queries
+    if (!isNaN(productId)) {
+      searchQuery = {
+        $or: [
+          { productId: productId }, // as string
+          { productId: parseInt(productId) }, // as number
+          { productId: Number(productId) } // as number (alternative)
+        ]
+      };
+    } else {
+      // If not a number, search as string only
+      searchQuery = { productId: productId };
+    }
 
-    const discount = await ProductDiscount.findOne({ productId /* or use id */ });
+    const discount = await ProductDiscount.findOne(searchQuery);
 
     if (!discount) {
       return res.status(200).json({
@@ -115,16 +129,22 @@ export const getDiscountByProductId = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Discount fetched successfully",
       data: discount
     });
 
   } catch (error) {
     console.error("Error in getDiscountByProductId:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error("ProductId received:", productId);
+    console.error("Error details:", error.message);
+    return res.status(500).json({ 
+      message: "Server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
+
 
 
 

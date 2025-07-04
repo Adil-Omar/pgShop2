@@ -1,12 +1,27 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const ProductDiscount = new mongoose.Schema({
-  productId: { type: String, required: true, unique: true },
-  discount: { type: Number, required: true, default: 0 }, // Default discount is 0%
-  discountPrice: { type: Number, default: 0 }, 
-  
+const ProductDiscountSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.Mixed, // Allows both String and Number
+    required: true,
+    index: true // Add index for better performance
+  },
+  discount: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  },
+  discountPrice: {
+    type: Number,
+    required: true,
+    min: 0
+  }
+}, {
+  timestamps: true
 });
 
-const ProductDiscountModel = mongoose.model("ProductDiscount", ProductDiscount);
+// Add compound index for better query performance
+ProductDiscountSchema.index({ productId: 1 });
 
-export default ProductDiscountModel;
+export default mongoose.model('ProductDiscount', ProductDiscountSchema);
